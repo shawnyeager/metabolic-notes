@@ -74,7 +74,8 @@ This installs everything:
 ### Make Options
 
 ```bash
-make SHELL_RC=~/.zshrc  # for zsh users (default: ~/.bashrc)
+make SHELL_RC=~/.zshrc         # for zsh users (default: ~/.bashrc)
+make NOTES_DIR=~/notes         # custom notes location (default: ~/Work/notes)
 ```
 
 ## Usage
@@ -121,20 +122,29 @@ make SHELL_RC=~/.zshrc  # for zsh users (default: ~/.bashrc)
 
 ## Configuration
 
-To change the default notes location (`~/Work/notes`), set `NOTES_DIR` before running `make`:
+### Notes Directory
+
+Set `NOTES_DIR` to change where notes are stored (both CLI and Neovim use this):
 
 ```bash
-# Add to ~/.bashrc or ~/.zshrc, then source it before running make
-export NOTES_DIR="$HOME/notes"
+# Add to ~/.bashrc or ~/.zshrc
+export NOTES_DIR="$HOME/notes"  # default: ~/Work/notes
 ```
 
-### Neovim Keybindings
+### CLI
 
-To change the default `<leader>n` prefix, add to your Neovim config:
+```bash
+export EDITOR="nvim"  # default: nvim
+```
+
+### Neovim
+
+Add to your Neovim config (e.g., `~/.config/nvim/init.lua`):
 
 ```lua
 require("metabolic").setup({
-  leader = "<leader>m",
+  notes_dir = "~/notes",    -- overrides NOTES_DIR env var
+  leader = "<leader>m",     -- default: <leader>n
 })
 ```
 
