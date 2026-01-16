@@ -131,6 +131,8 @@ Set `NOTES_DIR` to change where notes are stored (both CLI and Neovim use this):
 export NOTES_DIR="$HOME/notes"  # default: ~/Work/notes
 ```
 
+If using a custom location, set this **before** running `make` so the directory is created in the right place.
+
 ### CLI
 
 ```bash
