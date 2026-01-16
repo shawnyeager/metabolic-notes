@@ -71,22 +71,11 @@ This installs everything:
 | `make nvim` | Neovim plugin only |
 | `make aliases` | Add shell aliases to config |
 
-### Options
+### Make Options
 
 ```bash
-make SHELL_RC=~/.zshrc         # for zsh users
-make NOTES_DIR=~/notes         # custom notes location
-```
-
-### Custom Configuration
-
-To customize settings, add to your Neovim config:
-
-```lua
-require("metabolic").setup({
-  notes_dir = os.getenv("HOME") .. "/notes",  -- default: ~/Work/notes
-  leader = "<leader>m",                        -- default: <leader>n
-})
+make SHELL_RC=~/.zshrc         # for zsh users (default: ~/.bashrc)
+make NOTES_DIR=~/notes         # custom notes location (default: ~/Work/notes)
 ```
 
 ## Usage
@@ -133,23 +122,29 @@ require("metabolic").setup({
 
 ## Configuration
 
-### CLI
+### Notes Directory
 
-Add to `~/.bashrc` or `~/.zshrc`:
+Set `NOTES_DIR` to change where notes are stored (both CLI and Neovim use this):
 
 ```bash
-export NOTES_DIR="$HOME/Work/notes"  # default
-export EDITOR="nvim"                  # default
+# Add to ~/.bashrc or ~/.zshrc
+export NOTES_DIR="$HOME/notes"  # default: ~/Work/notes
+```
+
+### CLI
+
+```bash
+export EDITOR="nvim"  # default: nvim
 ```
 
 ### Neovim
 
-Edit `~/.local/share/nvim/site/plugin/metabolic.lua`:
+Add to your Neovim config (e.g., `~/.config/nvim/init.lua`):
 
 ```lua
 require("metabolic").setup({
-  notes_dir = os.getenv("HOME") .. "/Work/notes",  -- default
-  leader = "<leader>n",                             -- default
+  notes_dir = "~/notes",    -- overrides NOTES_DIR env var
+  leader = "<leader>m",     -- default: <leader>n
 })
 ```
 
