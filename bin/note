@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+#
+# metabolic-notes: A note-taking system that forces you to think
+# https://github.com/shawnyeager/metabolic-notes
+#
+
+NOTES="${NOTES_DIR:-$HOME/Work/notes}"
+EDITOR="${EDITOR:-nvim}"
+TODAY="$NOTES/daily/$(date +%Y-%m-%d).md"
+
+# Ensure daily directory exists
+mkdir -p "$NOTES/daily" "$NOTES/extracted"
+
+# Create today's note if it doesn't exist
+[[ ! -f "$TODAY" ]] && echo "# $(date +%Y-%m-%d)" > "$TODAY"
+
+case "$1" in
+  "")
+    $EDITOR "$TODAY"
+    ;;
+  what)
+    $EDITOR "$NOTES/WHAT.md"
+    ;;
+  extract)
+    cd "$NOTES/extracted" && $EDITOR .
+    ;;
+  week)
+    tmpfile=$(mktemp /tmp/week-review.XXXXXX.md)
+    for i in 6 5 4 3 2 1 0; do
+      dayfile="$NOTES/daily/$(date -d "$i days ago" +%Y-%m-%d).md"
+      [[ -f "$dayfile" ]] && cat "$dayfile" >> "$tmpfile" && echo -e "\n---\n" >> "$tmpfile"
+    done
+    $EDITOR -O "$NOTES/WHAT.md" "$tmpfile"
+    ;;
+  tags)
+    grep -rh "#To-" "$NOTES" 2>/dev/null | sort | uniq -c | sort -rn
+    ;;
+  add)
+    shift
+    echo -e "\n---\n$(date +%H:%M) | $*" >> "$TODAY"
+    ;;
+  help|--help|-h)
+    cat <<EOF
+metabolic-notes - A note-taking system that forces you to think
+
+Usage: note [command] [args]
+
+Commands:
+  (none)      Open today's daily note
+  what        Open WHAT anchor file
+  extract     Open extracted notes directory
+  week        Weekly extraction view (week's notes + WHAT side by side)
+  tags        List action tags with counts
+  add <text>  Quick append to today's note
+  help        Show this help message
+
+Environment:
+  NOTES_DIR   Notes directory (default: ~/Work/notes)
+  EDITOR      Editor to use (default: nvim)
+
+Learn more: https://github.com/shawnyeager/metabolic-notes
+EOF
+    ;;
+  *)
+    echo "Unknown command: $1"
+    echo "Run 'note help' for usage information"
+    exit 1
+    ;;
+esac
